@@ -5,8 +5,8 @@ import {
   findUserByEmail
 } from "../repositories/user.repository.js";
 
-export const register = (input: RegisterInput) => {
-  const existingUser = findUserByEmail(input.email);
+export const register = async (input: RegisterInput) => {
+  const existingUser = await findUserByEmail(input.email);
 
   if (existingUser) {
     throw new AppError("Email already registered", 409);
@@ -14,7 +14,7 @@ export const register = (input: RegisterInput) => {
 
   const passwordHash = `hashed_${input.password}`;
 
-  const user = createUser(
+  const user = await createUser(
     input.name,
     input.email,
     passwordHash
