@@ -1,4 +1,4 @@
-import { RegisterInput } from "../types/auth.types.js";
+import { RegisterInput } from "../validators/auth.validator.js";
 import { AppError } from "../errors/app-error.js";
 import {
   createUser,
