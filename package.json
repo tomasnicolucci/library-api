@@ -8,7 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "migrate": "node-pg-migrate -d DATABASE_URL"
+    "migrate": "node-pg-migrate -d DATABASE_URL --migration-file-language ts"
   },
   "repository": {
     "type": "git",

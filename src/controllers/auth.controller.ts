@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { register, login } from "../services/auth.service.js";
-import type { RegisterInput, LoginInput } from "../validators/auth.validator.js";
+import type { RegisterInput, LoginInput } from "../validators/validator.js";
 
 export const registerUser = async (
   req: Request<{}, {}, RegisterInput>,

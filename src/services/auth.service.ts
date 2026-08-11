@@ -1,12 +1,9 @@
-import { RegisterInput, LoginInput } from "../validators/auth.validator.js";
+import { RegisterInput, LoginInput } from "../validators/validator.js";
 import { AppError } from "../errors/app-error.js";
 import { DatabaseError } from "../errors/database-error.js";
 import { hashPassword, verifyPassword } from "../utils/password.js";
 import { generateToken } from "../utils/jwt.js";
-import {
-  createUser,
-  findUserByEmail
-} from "../repositories/user.repository.js";
+import { createUser, findUserByEmail } from "../repositories/user.repository.js";
 
 export const register = async (input: RegisterInput) => {
   const existingUser = await findUserByEmail(input.email);
