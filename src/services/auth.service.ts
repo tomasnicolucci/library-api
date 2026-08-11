@@ -1,6 +1,7 @@
 import { RegisterInput } from "../validators/auth.validator.js";
 import { AppError } from "../errors/app-error.js";
 import { DatabaseError } from "../errors/database-error.js";
+import { hashPassword } from "../utils/password.js";
 import {
   createUser,
   findUserByEmail
@@ -13,7 +14,7 @@ export const register = async (input: RegisterInput) => {
     throw new AppError("Email already registered", 409);
   }
 
-  const passwordHash = `hashed_${input.password}`;
+  const passwordHash = await hashPassword(input.password);
 
   try {
     const user = await createUser(
