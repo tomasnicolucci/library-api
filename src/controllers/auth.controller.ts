@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { register } from "../services/auth.service.js";
-import type { RegisterInput } from "../validators/auth.validator.js";
+import { register, login } from "../services/auth.service.js";
+import type { RegisterInput, LoginInput } from "../validators/auth.validator.js";
 
 export const registerUser = async (
   req: Request<{}, {}, RegisterInput>,
@@ -9,4 +9,22 @@ export const registerUser = async (
   const user = await register(req.body);
 
   return res.status(201).json(user);
+};
+
+export const loginUser = async (
+  req: Request<{}, {}, LoginInput>,
+  res: Response
+) => {
+  const result = await login(req.body);
+
+  return res.status(200).json(result);
+};
+
+export const getMe = async (
+  _req: Request,
+  res: Response
+) => {
+  return res.status(200).json({
+    userId: res.locals.userId
+  });
 };

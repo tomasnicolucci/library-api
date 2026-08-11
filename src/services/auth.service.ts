@@ -1,7 +1,8 @@
-import { RegisterInput } from "../validators/auth.validator.js";
+import { RegisterInput, LoginInput } from "../validators/auth.validator.js";
 import { AppError } from "../errors/app-error.js";
 import { DatabaseError } from "../errors/database-error.js";
-import { hashPassword } from "../utils/password.js";
+import { hashPassword, verifyPassword } from "../utils/password.js";
+import { generateToken } from "../utils/jwt.js";
 import {
   createUser,
   findUserByEmail
@@ -35,4 +36,27 @@ export const register = async (input: RegisterInput) => {
 
     throw error;
   }
+};
+
+export const login = async (input: LoginInput) => {
+  const user = await findUserByEmail(input.email);
+
+  if (!user) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  const isPasswordValid = await verifyPassword(
+    input.password,
+    user.passwordHash
+  );
+
+  if (!isPasswordValid) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  const token = generateToken(user.id);
+
+  return {
+    token
+  };
 };
