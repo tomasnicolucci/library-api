@@ -28,12 +28,47 @@ export const findAllAuthors = async () => {
 export const findAuthorById = async (id: number) => {
   const result = await pool.query(
     `
-      SELECT id, name
-      FROM authors
-      WHERE id = $1
+      SELECT
+        a.id,
+        a.name,
+        b.id AS book_id,
+        b.title,
+        b.isbn,
+        b.published_year
+      FROM authors a
+      LEFT JOIN books b
+        ON b.author_id = a.id
+      WHERE a.id = $1
+      ORDER BY b.id
     `,
     [id]
   );
 
-  return result.rows[0] ?? null;
+  if (result.rows.length === 0) {
+    return null;
+  }
+
+  const author = {
+    id: result.rows[0].id,
+    name: result.rows[0].name,
+    books: [] as Array<{
+      id: number;
+      title: string;
+      isbn: string;
+      publishedYear: number;
+    }>
+  };
+
+  for (const row of result.rows) {
+    if (row.book_id !== null) {
+      author.books.push({
+        id: row.book_id,
+        title: row.title,
+        isbn: row.isbn,
+        publishedYear: row.published_year
+      });
+    }
+  }
+
+  return author;
 };
