@@ -61,3 +61,11 @@ export const patchBookSchema = z.object({
 );
 
 export type PatchBookInput = z.infer<typeof patchBookSchema>;
+
+export const createLoanSchema = z.object({
+  bookId: z.number().int().positive(),
+  dueAt: z.iso.datetime()
+});
+
+export type CreateLoanInput =
+  z.infer<typeof createLoanSchema>;
