@@ -25,3 +25,39 @@ export const createAuthorSchema = z.object({
 });
 
 export type CreateAuthorInput = z.infer<typeof createAuthorSchema>;
+
+
+// Book
+
+export const createBookSchema = z.object({
+  title: z.string().min(1).max(200),
+  isbn: z.string().min(1).max(20),
+  publishedYear: z.number().int().min(1),
+  authorId: z.number().int().positive()
+});
+
+export type CreateBookInput = z.infer<typeof createBookSchema>;
+
+export const updateBookSchema = z.object({
+  title: z.string().min(1).max(200),
+  isbn: z.string().min(1).max(20),
+  publishedYear: z.number().int().min(1),
+  authorId: z.number().int().positive()
+});
+
+export type UpdateBookInput = z.infer<typeof updateBookSchema>;
+
+export const patchBookSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  isbn: z.string().min(1).max(20).optional(),
+  publishedYear: z.number().int().min(1).optional(),
+  authorId: z.number().int().positive().optional()
+})
+.refine(
+  (data) => Object.keys(data).length > 0,
+  {
+    message: "At least one field is required"
+  }
+);
+
+export type PatchBookInput = z.infer<typeof patchBookSchema>;
