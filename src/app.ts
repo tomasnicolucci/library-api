@@ -18,12 +18,13 @@ app.use("/authors", authorRouter);
 app.use("/books", bookRouter);
 app.use("/loans", loanRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use(errorHandler);
 
 app.get("/health", (req, res) => {
   res.json({
     status: "ok"
   });
 });
+
+app.use(errorHandler);
 
 export default app;
