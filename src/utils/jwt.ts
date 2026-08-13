@@ -16,7 +16,7 @@ export const generateToken = (userId: number, role: "USER" | "ADMIN"): string =>
     },
     jwtSecret,
     {
-      expiresIn: 3600
+      expiresIn: "15m"
     }
   );
 };

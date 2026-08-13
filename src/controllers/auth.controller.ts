@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { register, login } from "../services/auth.service.js";
-import type { RegisterInput, LoginInput } from "../validators/validator.js";
+import { register, login, refresh, logout } from "../services/auth.service.js";
+import type { RegisterInput, LoginInput, RefreshTokenInput } from "../validators/validator.js";
 
 export const registerUser = async (
   req: Request<{}, {}, RegisterInput>,
@@ -27,4 +27,22 @@ export const getMe = async (
   return res.status(200).json({
     userId: res.locals.userId
   });
+};
+
+export const refreshToken = async (
+  req: Request<{}, {}, RefreshTokenInput>,
+  res: Response
+) => {
+  const tokens = await refresh(req.body);
+
+  return res.status(200).json(tokens);
+};
+
+export const logoutUser = async (
+  req: Request<{}, {}, RefreshTokenInput>,
+  res: Response
+) => {
+  await logout(req.body);
+
+  return res.status(204).send();
 };

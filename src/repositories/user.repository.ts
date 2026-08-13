@@ -41,6 +41,36 @@ export const findUserByEmail = async (
   };
 };
 
+export const findUserById = async (id: number) => {
+  const result = await pool.query(
+    `
+      SELECT
+        id,
+        name,
+        email,
+        password_hash,
+        role
+      FROM users
+      WHERE id = $1
+    `,
+    [id]
+  );
+
+  const user = result.rows[0];
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    passwordHash: user.password_hash,
+    role: user.role
+  };
+};
+
 export const createUser = async (
   name: string,
   email: string,
