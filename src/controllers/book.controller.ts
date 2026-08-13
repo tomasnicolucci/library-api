@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { create, findAll, findById, update, remove, patch } from "../services/book.service.js";
-import type { CreateBookInput, PatchBookInput, UpdateBookInput } from "../validators/validator.js";
+import type { CreateBookInput, PatchBookInput, UpdateBookInput, BookQueryInput } from "../validators/validator.js";
 
 export const createBook = async (
   req: Request<{}, {}, CreateBookInput>,
@@ -15,7 +15,10 @@ export const getBooks = async (
   _req: Request,
   res: Response
 ) => {
-  const books = await findAll();
+  const query =
+    res.locals.validatedQuery as BookQueryInput;
+
+  const books = await findAll(query);
 
   return res.status(200).json(books);
 };

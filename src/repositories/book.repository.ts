@@ -1,4 +1,5 @@
 import { pool } from "../database/connection.js";
+import type { BookQueryInput } from "../validators/validator.js";
 
 export const createBook = async (
   title: string,
@@ -28,7 +29,47 @@ export const createBook = async (
   return result.rows[0];
 };
 
-export const findAllBooks = async () => {
+export const findAllBooks = async (
+  query: BookQueryInput
+) => {
+  const {
+    search,
+    page,
+    limit,
+    sort,
+    order
+  } = query;
+
+  const offset = (page - 1) * limit;
+
+  const values: unknown[] = [];
+
+  let whereClause = "";
+
+  if (search) {
+    values.push(`%${search}%`);
+
+    whereClause = `
+      WHERE
+        b.title ILIKE $${values.length}
+        OR a.name ILIKE $${values.length}
+    `;
+  }
+
+  const sortColumns = {
+    title: "b.title",
+    publishedYear: "b.published_year",
+    createdAt: "b.created_at"
+  };
+
+  const sortColumn = sortColumns[sort];
+
+  values.push(limit);
+  const limitIndex = values.length;
+
+  values.push(offset);
+  const offsetIndex = values.length;
+
   const result = await pool.query(
     `
       SELECT
@@ -41,8 +82,15 @@ export const findAllBooks = async () => {
       FROM books b
       INNER JOIN authors a
         ON b.author_id = a.id
-      ORDER BY b.id
-    `
+
+      ${whereClause}
+
+      ORDER BY ${sortColumn} ${order.toUpperCase()}
+
+      LIMIT $${limitIndex}
+      OFFSET $${offsetIndex}
+    `,
+    values
   );
 
   return result.rows.map((row) => ({
@@ -50,6 +98,7 @@ export const findAllBooks = async () => {
     title: row.title,
     isbn: row.isbn,
     publishedYear: row.published_year,
+
     author: {
       id: row.author_id,
       name: row.author_name

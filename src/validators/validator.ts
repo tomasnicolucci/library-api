@@ -67,6 +67,36 @@ export const patchBookSchema = z.object({
 
 export type PatchBookInput = z.infer<typeof patchBookSchema>;
 
+export const bookQuerySchema = z.object({
+  search: z.string().optional(),
+
+  page: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(1),
+
+  limit: z.coerce
+    .number()
+    .int()
+    .positive()
+    .max(100)
+    .default(10),
+
+  sort: z
+    .enum(["title", "publishedYear", "createdAt"])
+    .default("title"),
+
+  order: z
+    .enum(["asc", "desc"])
+    .default("asc")
+});
+
+export type BookQueryInput = z.infer<typeof bookQuerySchema>;
+
+
+// Loan
+
 export const createLoanSchema = z.object({
   bookId: z.number().int().positive(),
   dueAt: z.iso.datetime()

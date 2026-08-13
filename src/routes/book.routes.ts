@@ -4,11 +4,11 @@ import { createBook, deleteBook, getBookById, getBooks, patchBook, updateBook } 
 import { asyncHandler } from "../middlewares/async-handler.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { validate } from "../middlewares/validate.js";
-import { createBookSchema, patchBookSchema, updateBookSchema } from "../validators/validator.js";
+import { createBookSchema, patchBookSchema, updateBookSchema, bookQuerySchema } from "../validators/validator.js";
 
 const router = Router();
 
-router.get("/", authenticate, asyncHandler(getBooks));
+router.get("/", authenticate, validate(bookQuerySchema, "query"), asyncHandler(getBooks));
 
 router.get("/:id", authenticate, asyncHandler(getBookById));
 

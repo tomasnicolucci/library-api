@@ -1,4 +1,4 @@
-import type { CreateBookInput, PatchBookInput, UpdateBookInput } from "../validators/validator.js";
+import type { CreateBookInput, PatchBookInput, UpdateBookInput, BookQueryInput } from "../validators/validator.js";
 import { AppError } from "../errors/app-error.js";
 import { createBook, findAllBooks, findBookById, updateBook, deleteBook, patchBook } from "../repositories/book.repository.js";
 import { findAuthorById } from "../repositories/author.repository.js";
@@ -20,10 +20,10 @@ export const create = async (input: CreateBookInput) => {
   return book;
 };
 
-export const findAll = async () => {
-  const books = await findAllBooks();
-
-  return books;
+export const findAll = async (
+  query: BookQueryInput
+) => {
+  return findAllBooks(query);
 };
 
 export const findById = async (id: number) => {
