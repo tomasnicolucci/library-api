@@ -22,11 +22,12 @@ export const authenticate = (
   try {
     const payload = verifyToken(token);
 
-    if (!payload.sub) {
+    if (!payload.sub || (payload.role !== "USER" && payload.role !== "ADMIN")) {
       throw new AppError("Invalid token", 401);
     }
 
     res.locals.userId = Number(payload.sub);
+    res.locals.role = payload.role;
 
     next();
   } catch (error) {

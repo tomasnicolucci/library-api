@@ -6,6 +6,7 @@ export interface User {
   name: string;
   email: string;
   passwordHash: string;
+  role: "USER" | "ADMIN";
 }
 
 export const findUserByEmail = async (
@@ -17,7 +18,8 @@ export const findUserByEmail = async (
         id,
         name,
         email,
-        password_hash
+        password_hash,
+        role
       FROM users
       WHERE email = $1
     `,
@@ -34,7 +36,8 @@ export const findUserByEmail = async (
     id: user.id,
     name: user.name,
     email: user.email,
-    passwordHash: user.password_hash
+    passwordHash: user.password_hash,
+    role: user.role
   };
 };
 
@@ -56,7 +59,8 @@ export const createUser = async (
           id,
           name,
           email,
-          password_hash
+          password_hash,
+          role
       `,
       [name, email, passwordHash]
     );
@@ -67,7 +71,8 @@ export const createUser = async (
       id: user.id,
       name: user.name,
       email: user.email,
-      passwordHash: user.password_hash
+      passwordHash: user.password_hash,
+      role: user.role
     };
   } catch (error: unknown) {
     if (

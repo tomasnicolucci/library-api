@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { create, findAll, findById, returnBook } from "../services/loan.service.js";
+import { create, findAll, findById, returnBook, findAllAdmin, findActiveAdmin } from "../services/loan.service.js";
 import type { CreateLoanInput } from "../validators/validator.js";
 
 export const createLoan = async (
@@ -49,4 +49,22 @@ export const returnLoan = async (
   const loan = await returnBook(id, userId);
 
   return res.status(200).json(loan);
+};
+
+export const getAllLoans = async (
+  _req: Request,
+  res: Response
+) => {
+  const loans = await findAllAdmin();
+
+  return res.status(200).json(loans);
+};
+
+export const getAllActiveLoans = async (
+  _req: Request,
+  res: Response
+) => {
+  const loans = await findActiveAdmin();
+
+  return res.status(200).json(loans);
 };

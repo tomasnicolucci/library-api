@@ -1,7 +1,7 @@
 import type { CreateLoanInput } from "../validators/validator.js";
 import { AppError } from "../errors/app-error.js";
 import { findBookById } from "../repositories/book.repository.js";
-import { findActiveLoanByBookId, createLoan, returnLoan, findLoanByIdAndUserId, findAllLoansByUserId } from "../repositories/loan.repository.js";
+import { findActiveLoanByBookId, createLoan, returnLoan, findLoanByIdAndUserId, findAllLoansByUserId, findAllLoans, findAllActiveLoans} from "../repositories/loan.repository.js";
 
 export const create = async (
   userId: number,
@@ -62,4 +62,12 @@ export const returnBook = async (
   const returnedLoan = await returnLoan(id, userId);
 
   return returnedLoan;
+};
+
+export const findAllAdmin = async () => {
+  return findAllLoans();
+};
+
+export const findActiveAdmin = async () => {
+  return findAllActiveLoans();
 };

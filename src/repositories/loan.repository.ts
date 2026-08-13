@@ -163,3 +163,102 @@ export const returnLoan = async (
 
   return result.rows[0] ?? null;
 };
+
+export const findAllLoans = async () => {
+  const result = await pool.query(
+    `
+      SELECT
+        l.id,
+        l.user_id,
+        l.book_id,
+        l.loaned_at,
+        l.due_at,
+        l.returned_at,
+        u.name AS user_name,
+        u.email AS user_email,
+        b.title AS book_title,
+        b.isbn AS book_isbn,
+        a.id AS author_id,
+        a.name AS author_name
+      FROM loans l
+      INNER JOIN users u
+        ON l.user_id = u.id
+      INNER JOIN books b
+        ON l.book_id = b.id
+      INNER JOIN authors a
+        ON b.author_id = a.id
+      ORDER BY l.loaned_at DESC
+    `
+  );
+
+  return result.rows.map((row) => ({
+    id: row.id,
+    loanedAt: row.loaned_at,
+    dueAt: row.due_at,
+    returnedAt: row.returned_at,
+    user: {
+      id: row.user_id,
+      name: row.user_name,
+      email: row.user_email
+    },
+    book: {
+      id: row.book_id,
+      title: row.book_title,
+      isbn: row.book_isbn,
+      author: {
+        id: row.author_id,
+        name: row.author_name
+      }
+    }
+  }));
+};
+
+export const findAllActiveLoans = async () => {
+  const result = await pool.query(
+    `
+      SELECT
+        l.id,
+        l.user_id,
+        l.book_id,
+        l.loaned_at,
+        l.due_at,
+        l.returned_at,
+        u.name AS user_name,
+        u.email AS user_email,
+        b.title AS book_title,
+        b.isbn AS book_isbn,
+        a.id AS author_id,
+        a.name AS author_name
+      FROM loans l
+      INNER JOIN users u
+        ON l.user_id = u.id
+      INNER JOIN books b
+        ON l.book_id = b.id
+      INNER JOIN authors a
+        ON b.author_id = a.id
+      WHERE l.returned_at IS NULL
+      ORDER BY l.loaned_at DESC
+    `
+  );
+
+  return result.rows.map((row) => ({
+    id: row.id,
+    loanedAt: row.loaned_at,
+    dueAt: row.due_at,
+    returnedAt: row.returned_at,
+    user: {
+      id: row.user_id,
+      name: row.user_name,
+      email: row.user_email
+    },
+    book: {
+      id: row.book_id,
+      title: row.book_title,
+      isbn: row.book_isbn,
+      author: {
+        id: row.author_id,
+        name: row.author_name
+      }
+    }
+  }));
+};

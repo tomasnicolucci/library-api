@@ -8,10 +8,11 @@ if (!jwtSecret) {
   throw new Error("JWT_SECRET is not defined");
 }
 
-export const generateToken = (userId: number): string => {
+export const generateToken = (userId: number, role: "USER" | "ADMIN"): string => {
   return jwt.sign(
     {
-      sub: userId
+      sub: userId,
+      role
     },
     jwtSecret,
     {

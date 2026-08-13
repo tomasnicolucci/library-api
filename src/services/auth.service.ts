@@ -51,7 +51,7 @@ export const login = async (input: LoginInput) => {
     throw new AppError("Invalid email or password", 401);
   }
 
-  const token = generateToken(user.id);
+  const token = generateToken(user.id, user.role);
 
   return {
     token
